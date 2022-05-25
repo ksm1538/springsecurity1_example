@@ -14,10 +14,11 @@ spring:
     username: sa
     password:
 
-  mvc:
-    view:
-      prefix: /templates/
-      suffix: .mustache
+## mustache ??(??? ?? ???? ?????? ??)
+#  mvc:
+#    view:
+#      prefix: /templates/
+#      suffix: .mustache
 
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
