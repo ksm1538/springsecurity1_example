@@ -1,10 +1,22 @@
 package com.cos.security1.controller;
 
+import com.cos.security1.Repository.UserRepository;
+import com.cos.security1.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class IndexController {
+
+    @Autowired
+    UserRepository userRepository;
+
+    @Autowired
+    BCryptPasswordEncoder encoder;
 
     @GetMapping({"", "/"})
     public String index(){
@@ -12,4 +24,54 @@ public class IndexController {
         // view resolver setting : templates (prefix), .mustache (suffix)
         return "index"; // src/main/resources/templates/index.mustache
     }
+
+    @GetMapping({"/user"})
+    @ResponseBody
+    public String user(){
+        return "user";
+    }
+
+    @GetMapping({"/admin"})
+    @ResponseBody
+    public String admin(){
+        return "admin";
+    }
+
+    @GetMapping({"/manager"})
+    @ResponseBody
+    public String manager(){
+        return "manager";
+    }
+
+    // /login SpringSecurity 에서 사용하지만, SecurityConfig 에서 설정 가능
+    @GetMapping({"/loginForm"})
+    public String loginForm(){
+        return "loginForm";
+    }
+
+    @GetMapping({"/joinForm"})
+    public String joinForm(){
+        return "joinForm";
+    }
+
+    @PostMapping({"/join"})
+    public String join(User user){
+        user.setRole("ROLE_ADMIN");
+
+        // 패스워드 암호화를 진행하지 않으면 시큐리티 로그인이 불가능
+        String encPw = encoder.encode(user.getPassword());
+        user.setPassword(encPw);
+
+        userRepository.save(user);
+
+        return "redirect:/loginForm";
+    }
+
+    @GetMapping({"/joinProc"})
+    @ResponseBody
+    public String joinProc(){
+        return "회원가입 완료";
+    }
+
+
 }
