@@ -7,4 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 // 참고로, @Repository가 없어도 됨. (JpaRepository를 상속받아서)
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    User findByUsername(String username);
+
+
 }

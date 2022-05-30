@@ -3,6 +3,9 @@ package com.cos.security1.controller;
 import com.cos.security1.Repository.UserRepository;
 import com.cos.security1.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,16 +47,19 @@ public class IndexController {
     }
 
     // /login SpringSecurity 에서 사용하지만, SecurityConfig 에서 설정 가능
+    // 로그인 폼으로 이동
     @GetMapping({"/loginForm"})
     public String loginForm(){
         return "loginForm";
     }
 
+    // 회원가입 폼으로 이동
     @GetMapping({"/joinForm"})
     public String joinForm(){
         return "joinForm";
     }
 
+    // 회원가입 로직
     @PostMapping({"/join"})
     public String join(User user){
         user.setRole("ROLE_ADMIN");
@@ -73,5 +79,18 @@ public class IndexController {
         return "회원가입 완료";
     }
 
+    @Secured("ROLE_ADMIN")          // 이 메소드에 대해서만 특정 권한이 필요할 때 사용 가능
+    @GetMapping("/info")
+    @ResponseBody
+    public String info(){
+        return "개인정보";
+    }
 
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")       // 메소드 접근 이전에 확인하는 로직
+    //@PostAuthorize()                                                      // 메소드 접근 이후에 확인하는 로직
+    @GetMapping("/data")
+    @ResponseBody
+    public String data(){
+        return "데이터정보";
+    }
 }
