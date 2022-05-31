@@ -1,12 +1,17 @@
 package com.cos.security1.controller;
 
 import com.cos.security1.Repository.UserRepository;
+import com.cos.security1.config.auth.PrincipalDetails;
 import com.cos.security1.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,9 +33,12 @@ public class IndexController {
         return "index"; // src/main/resources/templates/index.mustache
     }
 
+    // 일반로그인을 하던, OAuth2로 로그인을 하던 PrincipalDetails로 받기 때문에 혼용 가능
     @GetMapping({"/user"})
     @ResponseBody
-    public String user(){
+    public String user(@AuthenticationPrincipal PrincipalDetails principalDetails)
+    {
+        System.out.println("principalDetails: "+principalDetails.getUser());
         return "user";
     }
 
@@ -92,5 +100,35 @@ public class IndexController {
     @ResponseBody
     public String data(){
         return "데이터정보";
+    }
+
+    // Authentication 사용방법
+    // 일반 로그인의 경우: PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal(); 쓰면 되지만
+    // OAuth2의 경우: OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();을 써야함.
+
+    // @AuthenticationPrincipal 사용방법
+    // 일반 로그인의 경우: @AuthenticationPrincipal UserDetails userDetails
+    // OAuth2의 경우: @AuthenticationPrincipal OAuth2User oAuth2
+
+    // 즉, Authentication 에 UserDetails or OAuth2User가 있음.
+    @GetMapping("/test/login")
+    @ResponseBody
+    public String testLogin(Authentication authentication, @AuthenticationPrincipal UserDetails userDetails){
+        System.out.println("/test/login ================");
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        System.out.println("authentication: "+principalDetails);
+        System.out.println("userDetails: "+userDetails.getUsername());
+        return "세션정보확인";
+    }
+
+    @GetMapping("/test/oauthlogin")
+    @ResponseBody
+    public String oauthlogin(Authentication authentication, @AuthenticationPrincipal OAuth2User oAuth2){
+        System.out.println("/test/oauthlogin ================");
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+
+        System.out.println("authenticaiton: "+oAuth2User.getAttributes());
+        System.out.println("oauth2User: "+oAuth2.getAttributes());
+        return "oAuth2 세션정보확인";
     }
 }

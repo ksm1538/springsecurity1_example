@@ -7,21 +7,41 @@ package com.cos.security1.config.auth;
 // User 오브젝트 타입 => UserDetails 타입 객체
 
 import com.cos.security1.model.User;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 // Security Session 안에 들어갈 수 있는 객체: Authentication
-// Authentication 안에 들어갈 수 있는 객체: UserDetails
-
-public class PrincipalDetails implements UserDetails {
+// Authentication 안에 들어갈 수 있는 객체: UserDetails, OAuth2User
+@Data
+public class PrincipalDetails implements UserDetails, OAuth2User {
 
     private User user;
+    private Map<String, Object> attibutes;
 
+    // 일반 로그인
     public PrincipalDetails(User user){
         this.user = user;
+    }
+
+    // OAuth2 로그인
+    public PrincipalDetails(User user, Map<String, Object> attibutes){
+        this.user = user;
+        this.attibutes = attibutes;
+    }
+    @Override
+    public String getPassword() {
+        return user.getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return user.getUsername();
     }
 
     // 해당 유저의 권한을 리턴하는 method
@@ -38,16 +58,6 @@ public class PrincipalDetails implements UserDetails {
         });
 
         return collect;
-    }
-
-    @Override
-    public String getPassword() {
-        return user.getPassword();
-    }
-
-    @Override
-    public String getUsername() {
-        return user.getUsername();
     }
 
     @Override
@@ -72,5 +82,20 @@ public class PrincipalDetails implements UserDetails {
     // 회원 사용 여부
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return attibutes;
+    }
+
+    @Override
+    public <A> A getAttribute(String name) {
+        return OAuth2User.super.getAttribute(name);
+    }
+
+    @Override
+    public String getName() {
+        return null;
     }
 }
