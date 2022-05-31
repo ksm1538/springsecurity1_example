@@ -20,6 +20,10 @@ public class User {
     private String email;
     private String role;
 
+    // OAuth2 구분자
+    private String provider;
+    private String providerId;
+
     @CreationTimestamp
     private Timestamp createDate;
 }
