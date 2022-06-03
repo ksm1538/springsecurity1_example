@@ -47,16 +47,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll()      // 위에 명시되지 않은 URL 은 로그인 및 권한 검사 X
                 .and()
                 .formLogin()
-                .loginPage("/loginForm")       // formLogin이 필요한 경우, /login 으로 보낸다.
+                .loginPage("/loginForm")       // formLogin이 필요한 경우, /loginForm 으로 보낸다.
                 .loginProcessingUrl("/login")   // login 주소가 호출이 되면 시큐리티가 낚이채서 대신 로그인을 진행
                 .defaultSuccessUrl("/")        // login 성공 시, 보내줄 기본 url
+                // OAuth2 로그인 설정(시작)
                 .and()
                 .oauth2Login()
-                .loginPage("/loginForm")
+                .loginPage("/loginForm")    // OAuth2의 로그인 페이지 URL.
                 .userInfoEndpoint()
                 .userService(principalOauth2UserSerivce)// 구글 로그인이 완료된 이후에 후 처리가 필요. (코드가 아닌 액세스토큰+사용자프로필의정보)를 가져옴
+                // OAuth2 로그인 설정(끝)
         ;
-
-
     }
 }

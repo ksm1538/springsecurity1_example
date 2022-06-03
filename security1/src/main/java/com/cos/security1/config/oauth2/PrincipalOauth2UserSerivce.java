@@ -2,6 +2,9 @@ package com.cos.security1.config.oauth2;
 
 import com.cos.security1.Repository.UserRepository;
 import com.cos.security1.config.auth.PrincipalDetails;
+import com.cos.security1.config.oauth2.provider.FacebookUserInfo;
+import com.cos.security1.config.oauth2.provider.GoogleUserInfo;
+import com.cos.security1.config.oauth2.provider.OAuth2UserInfo;
 import com.cos.security1.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -37,15 +40,27 @@ public class PrincipalOauth2UserSerivce extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         System.out.println("getAttributes: "+oAuth2User.getAttributes());
 
-        String provider = userRequest.getClientRegistration().getClientId();        // google
-        String providerId = oAuth2User.getAttribute("sub");
+        String platform = userRequest.getClientRegistration().getRegistrationId();        // google, facebook, etc
+        OAuth2UserInfo oAuth2UserInfo = null;
+
+        if(platform.equals("google")){
+            System.out.println("Google을 이용한 로그인");
+            oAuth2UserInfo = new GoogleUserInfo(oAuth2User.getAttributes());
+        }else if(platform.equals("facebook")){
+            System.out.println("Facebook을 이용한 로그인");
+            oAuth2UserInfo = new FacebookUserInfo(oAuth2User.getAttributes());
+        }else{
+            System.out.println("다른 플랫폼임. 지원 X");
+        }
+        String provider = oAuth2UserInfo.getProvider();
+        String providerId = oAuth2UserInfo.getProviderId();
 
         // OAuth2 로그인 시, username과 password는 필요없지만 형식상 넣어줌
         String username = provider + "_" + providerId;
         System.out.println("username: "+username);
         String password = bCryptPasswordEncoder.encode("provider");
         String role = "ROLE_USER";
-        String email = oAuth2User.getAttribute("email");
+        String email = oAuth2UserInfo.getEmail();
 
         User findUser = userRepository.findByUsername(username);
 
