@@ -18,6 +18,7 @@ import java.util.Map;
 
 // Security Session 안에 들어갈 수 있는 객체: Authentication
 // Authentication 안에 들어갈 수 있는 객체: UserDetails, OAuth2User
+// 즉, PrincipalDetails를 사용하는 이유는 Oauth2로 로그인 하는 사용자와 일반 로그인 하는 사용자를 하나의 객체로 이용하기 위함이다.
 @Data
 public class PrincipalDetails implements UserDetails, OAuth2User {
 

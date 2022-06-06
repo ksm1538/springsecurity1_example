@@ -4,6 +4,7 @@ import com.cos.security1.Repository.UserRepository;
 import com.cos.security1.config.auth.PrincipalDetails;
 import com.cos.security1.config.oauth2.provider.FacebookUserInfo;
 import com.cos.security1.config.oauth2.provider.GoogleUserInfo;
+import com.cos.security1.config.oauth2.provider.NaverUserInfo;
 import com.cos.security1.config.oauth2.provider.OAuth2UserInfo;
 import com.cos.security1.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,8 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 public class PrincipalOauth2UserSerivce extends DefaultOAuth2UserService {
@@ -49,6 +52,9 @@ public class PrincipalOauth2UserSerivce extends DefaultOAuth2UserService {
         }else if(platform.equals("facebook")){
             System.out.println("Facebook을 이용한 로그인");
             oAuth2UserInfo = new FacebookUserInfo(oAuth2User.getAttributes());
+        }else if(platform.equals("naver")){
+            System.out.println("naver를 이용한 로그인");
+            oAuth2UserInfo = new NaverUserInfo((Map)oAuth2User.getAttributes().get("response"));    // response를 가져와서 넣어주는 이유: 우리가 필요한 건 naver측에서 보내줄 때 response 안에 담아서 보내주기 때문임
         }else{
             System.out.println("다른 플랫폼임. 지원 X");
         }
