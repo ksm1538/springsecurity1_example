@@ -39,22 +39,22 @@ spring:
       client:
         registration:
           google:
-            client-id: 942963499628-huunbf8jnct8sd5g6hvcfs6ukcfmu0ce.apps.googleusercontent.com
-            client-secret: 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
+            client-id: 
+            client-secret:
             scope:
               - email
               - profile
 
           facebook:
-            client-id: 1719567395108497
-            client-secret: 571af0b75f4b038998901a855bf8a846
+            client-id: 
+            client-secret: 
             scope:
               - email
               - public_profile
 
           naver:
-            client-id: LncjaQUro8TMJm_GsAdv
-            client-secret: Yu2LJR_CNT
+            client-id: 
+            client-secret: 
             scope:
               - name
               - email
