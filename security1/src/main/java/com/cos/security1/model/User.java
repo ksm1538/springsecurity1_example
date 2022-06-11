@@ -8,6 +8,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Entity(name="tb_user")
 @Data
@@ -37,5 +40,13 @@ public class User {
         this.provider = provider;
         this.providerId = providerId;
         this.createDate = createDate;
+    }
+
+    // 권한 반환
+    public List<String> getRoleList(){
+        if(this.role.length() > 0){
+            return Arrays.asList(this.role.split(","));
+        }
+        return new ArrayList<>();
     }
 }
