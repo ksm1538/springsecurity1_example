@@ -2,11 +2,13 @@ package com.cos.security1.config;
 
 import com.cos.security1.config.filter.MyFilter1;
 import com.cos.security1.config.filter.MyFilter3;
+import com.cos.security1.config.jwt.JwtAuthenticationFilter;
 import com.cos.security1.config.oauth2.PrincipalOauth2UserSerivce;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.EnableGlobalAuthentication;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -66,6 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         .addFilter(corsFilter)              // 인증이 있어야할 때 시큐리티 필터에 등록. (인증이 필요없을 때 해당 컨트롤러에 @CrossOrigin 어노테이션을 사용하면 됨)
                         .formLogin().disable()              // Spring Security 로그인 사용 X
                         .httpBasic().disable()              // http를 제외한 다른 방식(js로 요청 등)을 허용하겠다.
+                        .addFilter(new JwtAuthenticationFilter(authenticationManager()))       // JWtAuthenticationFilter 추가. (로그인 기능을 비활성화해서 로그인 기능을 가진 커스텀 필터를 직접 넣어줌), authenticationManager()은 WebSecurityConfigurerAdapter이 가지고 있음
                         .authorizeRequests()
                         .antMatchers("/api/v1/user/**")
                         .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
