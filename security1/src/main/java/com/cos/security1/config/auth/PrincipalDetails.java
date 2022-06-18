@@ -6,7 +6,7 @@ package com.cos.security1.config.auth;
 // Authentication 안에 User 정보가 있어야 한다.
 // User 오브젝트 타입 => UserDetails 타입 객체
 
-import com.cos.security1.model.User;
+import com.cos.security1.Repository.model.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

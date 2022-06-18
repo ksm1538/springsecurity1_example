@@ -1,4 +1,4 @@
-package com.cos.security1.model;
+package com.cos.security1.Repository.model;
 
 
 import lombok.*;

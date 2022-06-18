@@ -2,10 +2,9 @@ package com.cos.security1.controller;
 
 import com.cos.security1.Repository.UserRepository;
 import com.cos.security1.config.auth.PrincipalDetails;
-import com.cos.security1.model.User;
+import com.cos.security1.Repository.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
