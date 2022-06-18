@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class PrincipalDetailsService implements UserDetailsService {
 
+    // spring data jpa
     @Autowired
     private UserRepository userRepository;
 
